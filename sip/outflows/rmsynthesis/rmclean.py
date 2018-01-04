@@ -39,7 +39,7 @@ def rmclean_prep(rmsynth, maxrm_est, npixels, weights, lambdasq, lambda0):
     return rmsf_double, clean_threshold
 
 
-def crosscorrelate(rmsynth_pixel, rmsf):
+def cross_correlate(rmsynth_pixel, rmsf):
     """Define the complex cross-correlation.
    
     Args:
@@ -54,7 +54,7 @@ def crosscorrelate(rmsynth_pixel, rmsf):
     return np.fft.ifft(np.fft.fft(rmsynth_pixel)*np.fft.fft(rmsf[::-1]))
 
 
-def correlatesignal(rmsynth_pixel, rmsf):
+def correlate_signal(rmsynth_pixel, rmsf):
     """Perform complex cross-correlation between the dirty data and the RMSF.
         
     Args:
@@ -66,32 +66,32 @@ def correlatesignal(rmsynth_pixel, rmsf):
     np.argmax(np.abs(shift)): index of signal with maximum cross-correlation.
     """
     # Cross-correlate the RMSF with the RM Synthesis data in a specific pixel:
-    xcorr = crosscorrelate(rmsynth_pixel, rmsf)
+    xcorr = cross_correlate(rmsynth_pixel, rmsf)
     # Shift the correlated signal:
     shift = np.fft.fftshift(xcorr)
     # Return the index with the highest amplitude:
     return np.argmax(np.abs(shift))
 
 
-def formcleancomponents(rmsynth_pixel, faradaypeak, rmclean_gain):
+def form_clean_components(rmsynth_pixel, faraday_peak, rmclean_gain):
     """Extract a complex-valued clean component.
     
     Args:
     rmsynth_pixel (numpy array): the dirty RM data for a specific pixel.
-    faradaypeak (int): the index of the peak of the clean component.
+    faraday_peak (int): the index of the peak of the clean component.
     rmclean_gain (float): loop gain for cleaning.
     
     Returns:
     ccomp: the complex-valued clean component.
     """
     # Extract ccomp, as loop gain sized component of complex-valued maxima:
-    ccomp = rmclean_gain*rmsynth_pixel[faradaypeak]
+    ccomp = rmclean_gain*rmsynth_pixel[faraday_peak]
     # Provide a de-rotated component, if one so desired it in future:
     # ccomp_derot = cc*np.exp(-2*1j*phi[faradaypeak]*lambda0)
     return ccomp
 
 
-def shiftscalermsf(rmsf_double, phi, cellsize, ccomp, faradaypeak):
+def shift_scale_rmsf(rmsf_double, phi, cellsize, ccomp, faraday_peak):
     """Shift and scale the RMSF, to the parameters of the found clean component.
         
     Args:
@@ -100,21 +100,21 @@ def shiftscalermsf(rmsf_double, phi, cellsize, ccomp, faradaypeak):
     phi (numpy array): array of Faraday depths.
     cellsize (float): advised cellsize in Faraday space.
     ccomp (float): the complex-valued clean component.
-    faradaypeak (int): the index of the peak of the clean component.
+    faraday_peak (int): the index of the peak of the clean component.
     
     Returns:
     ccomp*rmsf_shifted: the shifted and scaled RMSF.
     """
     # Calculate the integer number of pixels required to shift the RMSF:
-    faradayshift = phi[faradaypeak]/cellsize
-    faradayshift = faradayshift.astype(int)
+    faraday_shift = phi[faraday_peak]/cellsize
+    faraday_shift = faraday_shift.astype(int)
     # Shift the RMSF and pad with zeros based upon its sign:
     if faradayshift > 0:
-        rmsf_shifted = np.roll(rmsf_double, faradayshift)
+        rmsf_shifted = np.roll(rmsf_double, faraday_shift)
         rmsf_shifted[0:faradayshift] = 0.0
     elif faradayshift < 0:
-        rmsf_shifted = np.roll(rmsf_double, faradayshift)
-        rmsf_shifted[len(rmsf_shifted)+faradayshift:len(rmsf_shifted)] = 0.0
+        rmsf_shifted = np.roll(rmsf_double, faraday_shift)
+        rmsf_shifted[len(rmsf_shifted)+faraday_shift:len(rmsf_shifted)] = 0.0
     elif faradayshift == 0:
         rmsf_shifted = np.copy(rmsf_double)
     # The shifted RMSF is double the width of the sampled Faraday space
@@ -160,13 +160,13 @@ def rmclean_loop(rmsynth_pixel, rmsf, rmsf_double, phi, rmclean_gain, niter, \
             break
         else:
             # Cross-correlate the signal:
-            faradaypeak = correlatesignal(rmsynth_pixel, rmsf)
+            faradaypeak = correlate_signal(rmsynth_pixel, rmsf)
             # Identify the clean component:
-            ccomp = formcleancomponents(rmsynth_pixel, faradaypeak,
+            ccomp = form_clean_components(rmsynth_pixel, faraday_peak,
                                         rmclean_gain)
             # Shift and scale the rmsf:
-            rmsf_shifted = shiftscalermsf(rmsf_double, phi, cellsize,
-                                          ccomp, faradaypeak)
+            rmsf_shifted = shift_scale_rmsf(rmsf_double, phi, cellsize,
+                                          ccomp, faraday_peak)
             # Subtract the dirty beam from the data:
             rmsynth_pixel = rmsynth_pixel-rmsf_shifted
             # Save the clean component:

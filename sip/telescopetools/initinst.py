@@ -6,7 +6,7 @@ __author__ = "Jamie Farnes"
 __email__ = "jamie.farnes@oerc.ox.ac.uk"
 
 
-def initinst(inst):
+def init_inst(inst):
     """Initialise any parameters that are specific to a named telescope.
     Can expand to easy initialisation of other parameters as needed.
         

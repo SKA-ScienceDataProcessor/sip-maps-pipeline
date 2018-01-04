@@ -55,7 +55,7 @@ def rmsynth_advice(frequency, weights):
     return lambdasq, lambda0, rmsf_est, scale_est, maxrm_est, cellsize, npixels, phi
 
 
-def dormsynth(weights, phi, complex_p, lambdasq, lambda0):
+def do_rmsynth(weights, phi, complex_p, lambdasq, lambda0):
     """Perform the RM Synthesis.
     
     Args:
@@ -85,7 +85,7 @@ def dormsynth(weights, phi, complex_p, lambdasq, lambda0):
     return rmsynth, rmsf, ra_len, dec_len
 
 
-def rmcube_savetodisk(rmsynth, cellsize, maxrm_est, rmtype='abs', results_dir='./results_dir', outname='dirty'):
+def rmcube_save_to_disk(rmsynth, cellsize, maxrm_est, rmtype='abs', results_dir='./results_dir', outname='dirty'):
     """Save the RM cubes to disk.
         
     Args:
@@ -132,7 +132,7 @@ def rmcube_savetodisk(rmsynth, cellsize, maxrm_est, rmtype='abs', results_dir='.
     return
 
 
-def loadimdata(results_dir):
+def load_im_data(results_dir):
     """Load the full-Stokes images into memory.
     
     Args:

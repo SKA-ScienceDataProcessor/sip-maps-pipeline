@@ -9,7 +9,7 @@ __author__ = "Jamie Farnes"
 __email__ = "jamie.farnes@oerc.ox.ac.uk"
 
 
-def converttostokes(vis, poldef):
+def convert_to_stokes(vis, poldef):
     """Convert the polarisation frame data into Stokes parameters.
         
     Args:

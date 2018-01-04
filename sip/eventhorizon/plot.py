@@ -17,7 +17,7 @@ pylab.rcParams['figure.figsize'] = (4.0, 4.0)
 pylab.rcParams['image.cmap'] = 'rainbow'
 
 
-def uvcov(vis):
+def uv_cov(vis):
     """Plot the uv-coverage of the data.
         
     Args:
@@ -60,7 +60,7 @@ def uvcov(vis):
         raise
 
 
-def uvdist(vis):
+def uv_dist(vis):
     """Plot the amplitude of the uv-data as a function of uv-distance.
         
     Args:
@@ -78,7 +78,7 @@ def uvdist(vis):
         raise
 
 
-def pltrmsf(phi, rmsf):
+def plt_rmsf(phi, rmsf):
     """Plot the rotation measure spread function (RMSF) of the data.
     
     Args:

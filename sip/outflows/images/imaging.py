@@ -16,13 +16,13 @@ __author__ = "Jamie Farnes"
 __email__ = "jamie.farnes@oerc.ox.ac.uk"
 
 
-def wstack(vis, npixeladvice, celladvice, channel, results_dir):
+def wstack(vis, npixel_advice, cell_advice, channel, results_dir):
     """Do w-stacked imaging of visibility data.
         
     Args:
     vis (obj): ARL visibility data.
-    npixeladvice (float): number of pixels in output image.
-    celladvice (float): cellsize in output image.
+    npixel_advice (float): number of pixels in output image.
+    cell_advice (float): cellsize in output image.
     channel (int): channel number to be imaged (affects output filename).
     results_dir (str): directory to save results.
     """
@@ -32,8 +32,8 @@ def wstack(vis, npixeladvice, celladvice, channel, results_dir):
         # Obtain advice on w-proj parameters:
         advice = advise_wide_field(vis)
         # Create a model image:
-        model = create_image_from_visibility(vis, cellsize=celladvice,
-                                             npixel=npixeladvice,
+        model = create_image_from_visibility(vis, cellsize=cell_advice,
+                                             npixel=npixel_advice,
                                              polarisation_frame=PolarisationFrame('stokesIQUV'))
         # Weight the visibilities:
         vis, _, _ = weight_visibility(vis, model)
@@ -55,13 +55,13 @@ def wstack(vis, npixeladvice, celladvice, channel, results_dir):
         raise
 
 
-def wproject(vis, npixeladvice, celladvice, channel, results_dir):
+def wproject(vis, npixel_advice, cell_advice, channel, results_dir):
     """Do w-projected imaging of visibility data.
     
     Args:
     vis (obj): ARL visibility data.
-    npixeladvice (float): number of pixels in output image.
-    celladvice (float): cellsize in output image.
+    npixel_advice (float): number of pixels in output image.
+    cell_advice (float): cellsize in output image.
     channel (int): channel number to be imaged (affects output filename).
     results_dir (str): directory to save results.
     """
@@ -71,8 +71,8 @@ def wproject(vis, npixeladvice, celladvice, channel, results_dir):
         # Obtain advice on w-proj parameters:
         advice = advise_wide_field(vis)
         # Create a model image:
-        model = create_image_from_visibility(vis, cellsize=celladvice,
-                                             npixel=npixeladvice,
+        model = create_image_from_visibility(vis, cellsize=cell_advice,
+                                             npixel=npixel_advice,
                                              polarisation_frame=PolarisationFrame('stokesIQUV'))
         # Weight the visibilities:
         vis, _, _ = weight_visibility(vis, model)
