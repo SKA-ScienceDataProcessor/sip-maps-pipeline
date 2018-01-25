@@ -97,7 +97,7 @@ def rmcube_save_to_disk(rmsynth, cellsize, maxrm_est, rmtype='abs', results_dir=
     outname (str): outname for saved file.
     """
     # Read in the first channel image, and appropriate it as the new RM cube:
-    im_rmsynth = import_image_from_fits('%s/imaging_dirty_WStack-%s.fits' % (results_dir, 0))
+    im_rmsynth = import_image_from_fits('%s/imaging_clean_WStack-%s.fits' % (results_dir, 0))
     # Output the polarised data:
     try:
         if rmtype == 'abs':
@@ -147,11 +147,11 @@ def load_im_data(results_dir):
         if os.path.isdir(results_dir):
             try:
                 # Load the channel 0 data as an image template:
-                image_temp = import_image_from_fits('%s/imaging_dirty_WStack-%s.fits'
+                image_temp = import_image_from_fits('%s/imaging_clean_WStack-%s.fits'
                                                     % (results_dir, 0))
                 # Fill image_temp with the multi-frequency data:
                 image_temp.data = np.concatenate(([import_image_from_fits(
-                                                   '%s/imaging_dirty_WStack-%s.fits'
+                                                   '%s/imaging_clean_WStack-%s.fits'
                                                     % (results_dir, channel)).data
                                                     for channel in range(0, 40)]))
                 # Read the array of the channel frequencies:

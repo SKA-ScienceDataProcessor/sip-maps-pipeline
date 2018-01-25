@@ -109,13 +109,13 @@ def shift_scale_rmsf(rmsf_double, phi, cellsize, ccomp, faraday_peak):
     faraday_shift = phi[faraday_peak]/cellsize
     faraday_shift = faraday_shift.astype(int)
     # Shift the RMSF and pad with zeros based upon its sign:
-    if faradayshift > 0:
+    if faraday_shift > 0:
         rmsf_shifted = np.roll(rmsf_double, faraday_shift)
-        rmsf_shifted[0:faradayshift] = 0.0
-    elif faradayshift < 0:
+        rmsf_shifted[0:faraday_shift] = 0.0
+    elif faraday_shift < 0:
         rmsf_shifted = np.roll(rmsf_double, faraday_shift)
         rmsf_shifted[len(rmsf_shifted)+faraday_shift:len(rmsf_shifted)] = 0.0
-    elif faradayshift == 0:
+    elif faraday_shift == 0:
         rmsf_shifted = np.copy(rmsf_double)
     # The shifted RMSF is double the width of the sampled Faraday space
     # to ensure the shifted beam is subtracted correctly.
@@ -160,7 +160,7 @@ def rmclean_loop(rmsynth_pixel, rmsf, rmsf_double, phi, rmclean_gain, niter, \
             break
         else:
             # Cross-correlate the signal:
-            faradaypeak = correlate_signal(rmsynth_pixel, rmsf)
+            faraday_peak = correlate_signal(rmsynth_pixel, rmsf)
             # Identify the clean component:
             ccomp = form_clean_components(rmsynth_pixel, faraday_peak,
                                         rmclean_gain)
@@ -171,7 +171,7 @@ def rmclean_loop(rmsynth_pixel, rmsf, rmsf_double, phi, rmclean_gain, niter, \
             rmsynth_pixel = rmsynth_pixel-rmsf_shifted
             # Save the clean component:
             cclist.append(ccomp)
-            ccpeak.append(faradaypeak)
+            ccpeak.append(faraday_peak)
     cclist = np.array(cclist)
     ccpeak = np.array(ccpeak)
     # Restore all of the clean components, convolved with the clean beam:
@@ -184,7 +184,7 @@ def rmclean_loop(rmsynth_pixel, rmsf, rmsf_double, phi, rmclean_gain, niter, \
     return rmsynth_pixel
 
 
-def dormclean(rmsynth, phi, rmsf, rmsf_double, rmsf_est, clean_threshold, \
+def do_rmclean(rmsynth, phi, rmsf, rmsf_double, rmsf_est, clean_threshold, \
               ra_len, dec_len, cellsize):
     """Perform the RM-clean.
     

@@ -25,6 +25,10 @@ def wstack(vis, npixel_advice, cell_advice, channel, results_dir):
     cell_advice (float): cellsize in output image.
     channel (int): channel number to be imaged (affects output filename).
     results_dir (str): directory to save results.
+    
+    Returns:
+    dirty: dirty image.
+    psf: image of psf.
     """
     try:
         vis_slices = len(np.unique(vis.time))
@@ -53,6 +57,7 @@ def wstack(vis, npixel_advice, cell_advice, channel, results_dir):
     except:
         print("Unexpected error:", sys.exc_info()[0])
         raise
+    return dirty, psf
 
 
 def wproject(vis, npixel_advice, cell_advice, channel, results_dir):
@@ -64,6 +69,10 @@ def wproject(vis, npixel_advice, cell_advice, channel, results_dir):
     cell_advice (float): cellsize in output image.
     channel (int): channel number to be imaged (affects output filename).
     results_dir (str): directory to save results.
+    
+    Returns:
+    dirty: dirty image.
+    psf: image of psf.
     """
     try:
         vis_slices = len(np.unique(vis.time))
@@ -92,3 +101,4 @@ def wproject(vis, npixel_advice, cell_advice, channel, results_dir):
     except:
         print("Unexpected error:", sys.exc_info()[0])
         raise
+    return dirty, psf
